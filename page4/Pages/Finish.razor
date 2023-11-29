@@ -1,0 +1,83 @@
+﻿@page "/finish"
+@inject NavigationManager NavigationManager
+
+
+<div class="title-container">
+    <h1 class="page-title">化療預約系統</h1>
+</div>
+
+<div class="menu-container">
+    <button class="menu-button selected">選擇化療時段</button>
+    <button class="menu-button selected">填寫資料</button>
+    <button class="menu-button">預約完成</button>
+</div>
+
+
+<br />
+<br />
+
+<center><p>預約成功！</p></center>
+<center><p>請攜帶相關證件準時報到</p></center>
+<br />
+<center><button class="button4" @onclick="NavigateToLoginPage">登出</button></center>
+
+
+@code {
+    private void NavigateToLoginPage()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
+
+<style>
+
+    .title-container {
+        background-color: #acc7d0;
+        text-align: center;
+        padding: 20px;
+        margin-bottom: 10px; /* Add margin at the bottom */
+        margin-top: 0;
+    }
+
+    .page-title {
+        font-size: 1.5em; /* Decrease font size */
+    }
+
+    .menu-container {
+        display: flex;
+        justify-content: space-around;
+        background-color: #90aab0;
+        padding: 10px;
+        margin-left: 60px; /* Add margin to the left */
+        margin-right: 60px; /* Add margin to the right */
+    }
+
+    .menu-button {
+        background-color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        margin: 0; /* Reset margin for the buttons */
+    }
+
+    
+
+
+    .selected {
+        background-color: rgba(190, 190, 190, 0.7); /* Set the background color for the selected button */
+    }
+
+    .i-con {
+        position: relative;
+        margin-bottom: -5px;
+    }
+
+    .button4 {
+        background-color: #e1e7ea; /* 水藍色背景 */
+        color: black;
+        border: 0.5px solid black; /* 黑色細框 */
+        border-radius: 12px; /* 圓邊 */
+        padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
+        cursor: pointer;
+    }
+</style>

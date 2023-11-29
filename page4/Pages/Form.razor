@@ -1,0 +1,277 @@
+﻿@page "/form"
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+
+<h3 style="color: #000000; background-color: 	#acc7d0; padding: 10px; text-align: center;">化療病床預約平台</h3>
+<h4 style=" text-align: center ;">入院前評估表單</h4>
+<p style=" text-align: center ;">請您根據最近一週的狀況填寫表單</p>
+
+<div class="table-container" style=" width: 100%;max-width: 900px; margin: auto;">
+    <table class="table">
+        <tbody>
+            <tr>
+                <td style="width: 30%;">病歷號：</td>
+                <td><input type="text" @bind="ChartNo" /></td>
+            </tr>
+            <tr>
+                <td>評估日期：</td>
+                <td><input type="date" @bind="Date" /></td>
+            </tr>
+            <tr>
+                <td>身高(cm)：</td>
+                <td><input type="text" @bind="Height" style="width: 80px;" /> cm</td>
+            </tr>
+            <tr>
+                <td>體重(kg)：</td>
+                <td><input type="text" @bind="Weight" style="width: 80px;" /> kg</td>
+            </tr>
+            <tr>
+                <td>意識：</td>
+                <td>
+                    <input type="radio" id="clear" name="consciousness" @bind="Conscious" />
+                    <label for="clear">清醒</label>
+                    <input type="radio" id="drowsy" name="consciousness" @bind="Conscious" />
+                    <label for="drowsy">嗜睡</label>
+                    <input type="radio" id="unconscious" name="consciousness" @bind="Conscious" />
+                    <label for="unconscious">昏迷</label>
+                </td>
+            </tr>
+            <tr>
+                <td>血壓：</td>
+                <td>
+                    <input type="text" @bind="BPSystolic" style="width: 40px; @GetColor(BPSystolic, 90, 130)" /> /
+                    <input type="text" @bind="BPDiastolic" style="width: 40px; @GetColor(BPDiastolic, 60, 90)" /> mmHg
+                </td>
+            </tr>
+            <tr>
+                <td>心率：</td>
+                <td>
+                    <input type="text" @bind="HR" style="width: 80px; @GetColor(HR, 60, 100)" /> 次/分
+                </td>
+            </tr>
+            <tr>
+                <td>呼吸速率：</td>
+                <td><input type="text" @bind="RR" style="width: 80px; @GetColor(RR, 12, 20)" /> 次/分</td>
+            </tr>
+            <tr>
+                <td>體溫：</td>
+                <td><input type="text" @bind="BT" style="width: 80px; @GetColor(BT, 35.0, 37.5)" /> ℃ </td>
+            </tr>
+            <tr>
+                <td>目前身體狀況：</td>
+                <td>
+                    <input type="radio" id="good" name="healthStatus" @bind="Health" />
+                    <label for="good">良好</label>
+                    <input type="radio" id="normal" name="healthStatus" @bind="Health" />
+                    <label for="normal">一般</label>
+                    <input type="radio" id="fatigue" name="healthStatus" @bind="Health" />
+                    <label for="unwell">不適</label>
+                </td>
+            </tr>
+            <tr>
+                <td>出國狀況：</td>
+                <td>
+                    <select @bind="Abroad">
+                        <option value="近期未出國">近期未出國</option>
+                        <option value="近期有出國">近期有出國</option>
+                        <option value="長期在國外居住">長期在國外居住</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>職業：</td>
+                <td>
+                    <input type="radio" id="professional" name="occupation" @bind="Occupation" />
+                    <label for="professional">專業人員（醫生、護士、工程師等）    </label>
+                    <input type="radio" id="farmer" name="occupation" @bind="Occupation" />
+                    <label for="farmer">農民</label><br>
+                    <input type="radio" id="worker" name="occupation" @bind="Occupation" />
+                    <label for="worker">工人      </label>
+                    <input type="radio" id="administrator" name="occupation" @bind="Occupation" />
+                    <label for="administrator">行政人員      </label>
+                    <input type="radio" id="student" name="occupation" @bind="Occupation" />
+                    <label for="student">學生      </label>
+                    <input type="radio" id="freelancer" name="occupation" @bind="Occupation" />
+                    <label for="freelancer">自由職業者</label><br>
+                    <input type="radio" id="otherOccupation" name="occupation" value="其他" @onchange="ToggleOtherOccupation" />
+                    <label for="otherOccupation">其他&nbsp; </label>
+
+                    <!-- 如果選擇其他，提供一個文本框 -->
+                    @if (ShowOtherOccupation)
+                    {
+                        <input type="text" @bind="OtherOccupation" placeholder="請輸入您的職業" />
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>過敏史：</td>
+                <td><input @bind="AllergyHistory" /></td>
+            </tr>
+            <tr>
+                <td>疾病史：</td>
+                <td><input @bind="MedicalHistory" /></td>
+            </tr>
+            <tr>
+                <td>操作人員：</td>
+                <td><input @bind="Operator" /></td>
+            </tr>
+            <tr>
+                <td>操作時間：</td>
+                <td><input @bind="OperatingTime" /></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div style="display: flex; justify-content: center;">
+    <button @onclick="SubmitForm" class="button">確認</button>
+    <button @onclick="NavigateToHome" class="button">回首頁</button>
+</div>
+
+
+<div style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
+    @if (IsFormSubmitted && IsFormValid())
+    {
+        <div style="color: #00A600; padding: 10px; margin-bottom: 10px;">請進行時段預約。</div>
+        <div style="display: flex; justify-content: center;">
+            <button @onclick="NavigateToReservation" style="background-color: #E0E0E0; color: #272727; border: 1px solid black; margin-right: 10px;">預約</button>
+        </div>
+
+        <br>
+
+        <br>
+    }
+    else if (IsFormSubmitted)
+    {
+        <div style="color: #FF0000; padding: 10px; margin-bottom: 10px;">尚不適合進行化療，請洽詢護理人員再進行預約。</div>
+    }
+</div>
+
+<br />
+<br />
+
+@code {
+    private string ChartNo = "";
+    private DateTime Date = DateTime.Now.Date;
+    private string Height = "";
+    private string Weight = "";
+    private string Conscious = "";
+    private string BPSystolic = "";
+    private string BPDiastolic = "";
+    private string HR = "";
+    private string RR = "";
+    private string BT = "";
+    private string Health = "";
+    private string Abroad = "近期未出國";
+    private string Occupation = "";
+    private string AllergyHistory = "";
+    private string MedicalHistory = "";
+    private string Operator = "";
+    private string OperatingTime = "";
+
+    private bool ShowOtherOccupation = false;
+    private string OtherOccupation = "";
+    private bool IsFormSubmitted = false;
+
+    private void ToggleOtherOccupation(ChangeEventArgs e)
+    {
+        ShowOtherOccupation = e.Value?.ToString() == "其他";
+        if (!ShowOtherOccupation)
+        {
+            OtherOccupation = string.Empty;
+        }
+    }
+
+    private string GetColor(string value, double min, double max)
+    {
+        if (!string.IsNullOrEmpty(value) && double.TryParse(value, out double doubleValue))
+        {
+            return doubleValue < min || doubleValue > max ? "color: red;" : string.Empty;
+        }
+        return string.Empty;
+    }
+
+    private void SubmitForm()
+    {
+        // 檢查表單是否有效
+        if (IsFormValid())
+        {
+            OperatingTime = DateTime.Now.ToString();
+            IsFormSubmitted = true;
+            // 重新檢查並更新狀態
+            StateHasChanged();
+        }
+    }
+
+
+    private bool IsFormValid()
+    {
+        if (!string.IsNullOrEmpty(BT) && double.TryParse(BT, out double btValue))
+        {
+            if (btValue < 35.0 || btValue > 37.5)
+            {
+                return false;
+            }
+        }
+
+        if (!string.IsNullOrEmpty(HR) && int.TryParse(HR, out int hrValue))
+        {
+            if (hrValue < 60 || hrValue > 100)
+            {
+                return false;
+            }
+        }
+
+        if (!string.IsNullOrEmpty(RR) && int.TryParse(RR, out int rrValue))
+        {
+            if (rrValue < 12 || rrValue > 20)
+            {
+                return false;
+            }
+        }
+
+        if (!string.IsNullOrEmpty(BPSystolic) && int.TryParse(BPSystolic, out int bpSystolicValue))
+        {
+            if (bpSystolicValue < 90 || bpSystolicValue > 130)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void NavigateToHome()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    private void NavigateToReservation()
+    {
+        Navigation.NavigateTo("/reservation");
+    }
+}
+
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        color: black;
+    }
+
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    .button {
+        background-color: #e1e7ea; /* 水藍色背景 */
+        color: black;
+        border: 0.5px solid black; /* 黑色細框 */
+        border-radius: 12px; /* 圓邊 */
+        padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
+        margin: 0 15px; /* 調整按鈕之間的間距 */
+        cursor: pointer;
+    }
+</style>

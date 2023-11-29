@@ -1,0 +1,338 @@
+﻿@page "/reservation"
+@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+<div class="title-container">
+    <h1 class="page-title">化療預約系統</h1>
+</div>
+
+<div class="menu-container">
+    <button class="menu-button">選擇化療時段</button>
+    <button class="menu-button selected">填寫資料</button>
+    <button class="menu-button selected">預約完成</button>
+</div>
+
+<div class="mt-3">
+    <label for="selectedDate" class="btn-bed">選擇日期</label>
+    <div class="color-box" style="background-color: #ffffff;"></div> ：可預約
+    <div class="color-box" style="background-color: #c5c2c2;"></div> ：已額滿
+    <div class="color-box" style="background-color: #45539d;"></div> ：已選擇
+    <div class="date-picker-container datepicker">
+        <InputDate id="selectedDate" @bind-Value="selectedDate" />
+    </div>
+</div>
+
+<div class="mt-3">
+    <p class="btn-bed">選擇床段</p>
+    <div class="color-box" style="background-color: #ffffff;"></div> ：尚未預約
+    <div class="color-box" style="background-color: #bdbaba;"></div> ：已額滿
+    <div class="color-box" style="background-color: #45539d;"></div> ：已選擇
+    <div class="color-box" style="background-color: #7188ba;"></div> ：可選擇
+    <p>每半小時一個床段，若需要選擇多個床段，請選擇相鄰時段。</p>
+</div>
+
+@foreach (var bed in new[] { "A", "B", "C" })
+{
+    var tempBed = bed;
+    <div style="margin-bottom: 10px;">
+        <button class="bed-button" @onclick="() => ToggleMenu(tempBed)">病床 @tempBed</button>
+        @if (IsMenuVisible(tempBed))
+        {
+            <div id="menu">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 90%;">時段</th>
+                            <th style="width: 10%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var timeSlot in TimeSlots)
+                        {
+                            <tr @onclick="() => ToggleCheckbox(tempBed, timeSlot)" class="@RowStyle(tempBed, timeSlot)">
+                                <td style="color: @(checkboxDictionaries[tempBed][timeSlot] ? "white" : "black")">@timeSlot</td>
+                                <td><input type="checkbox" @bind="checkboxDictionaries[tempBed][timeSlot]" /></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div style="text-align: center;">
+                    <button @onclick="() => ConfirmSelection(tempBed)">確認</button>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<!-- 月历控件 -->
+<div id="datepicker" style="display: none;"></div>
+
+<div class="mt-3 text-center">
+    <button class="btn btn-primary" @onclick="GoToHomePage">
+        回首頁
+    </button>
+    &nbsp;
+    <button class="btn btn-primary" @onclick="GoToNextStep">
+        下一步
+    </button>
+</div>
+
+@code {
+    private Dictionary<string, Dictionary<string, bool>> checkboxDictionaries;
+
+    private Dictionary<string, List<string>> selectedTimeSlots = new Dictionary<string, List<string>>();
+
+    private List<string> TimeSlots = new List<string>
+{
+        "09:00-09:30", "09:30-10:00", "10:00-10:30", "10:30-11:00",
+        "11:00-11:30", "11:30-12:00", "12:00-12:30", "12:30-13:00",
+        "13:00-13:30", "13:30-14:00", "14:00-14:30", "14:30-15:00",
+        "15:00-15:30", "15:30-16:00", "16:00-16:30", "16:30-17:00"
+    };
+
+
+    private DateTime selectedDate { get; set; } = DateTime.Now;
+
+    protected override void OnInitialized()
+    {
+        checkboxDictionaries = null; // 菜單一開始是隱藏的
+        selectedTimeSlots = new Dictionary<string, List<string>>();
+    }
+
+    private bool IsMenuVisible(string bed)
+    {
+        return checkboxDictionaries != null && checkboxDictionaries.ContainsKey(bed);
+    }
+
+    private string RowStyle(string bed, string timeSlot)
+    {
+        return checkboxDictionaries != null && checkboxDictionaries[bed][timeSlot] ? "selected" : "";
+    }
+
+    private void ToggleMenu(string bed)
+    {
+        if (IsMenuVisible(bed))
+        {
+            // 如果菜單已經打開，更新 checkboxDictionaries 以反映上次的選擇
+            checkboxDictionaries = new Dictionary<string, Dictionary<string, bool>>();
+            checkboxDictionaries[bed] = new Dictionary<string, bool>();
+            foreach (var timeSlot in TimeSlots)
+            {
+                checkboxDictionaries[bed][timeSlot] = selectedTimeSlots.ContainsKey(bed) && selectedTimeSlots[bed].Contains(timeSlot);
+            }
+        }
+        else
+        {
+            // 顯示指定床位的菜單
+            checkboxDictionaries = new Dictionary<string, Dictionary<string, bool>>();
+            selectedTimeSlots[bed] = new List<string>();
+            checkboxDictionaries[bed] = new Dictionary<string, bool>();
+            foreach (var timeSlot in TimeSlots)
+            {
+                checkboxDictionaries[bed][timeSlot] = selectedTimeSlots.ContainsKey(bed) && selectedTimeSlots[bed].Contains(timeSlot);
+            }
+        }
+    }
+
+    private void ToggleCheckbox(string bed, string timeSlot)
+    {
+        if (checkboxDictionaries != null)
+        {
+            checkboxDictionaries[bed][timeSlot] = !checkboxDictionaries[bed][timeSlot];
+        }
+    }
+
+    private void ConfirmSelection(string bed)
+    {
+        // 處理確認按鈕的邏輯
+        Console.WriteLine($"床位: {bed}");
+        selectedTimeSlots[bed] = new List<string>();
+
+        foreach (var timeSlot in TimeSlots)
+        {
+            if (checkboxDictionaries[bed][timeSlot])
+            {
+                Console.WriteLine($"選擇了時間段: {timeSlot}");
+                selectedTimeSlots[bed].Add(timeSlot);
+            }
+        }
+
+        // 移除床位對應的菜單
+        checkboxDictionaries = null;
+    }
+
+    private async Task ShowDatePicker()
+    {
+        await JSRuntime.InvokeVoidAsync("ShowDatePicker");
+    }
+
+    private void GoToHomePage()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    private void GoToNextStep()
+    {
+        NavigationManager.NavigateTo("/record");
+    }
+
+
+}
+
+<style>
+    .title-container {
+        background-color: #acc7d0;
+        text-align: center;
+        padding: 30px; /* 調整上下 padding 來增加標題的高度 */
+        margin-bottom: 10px;
+        margin-top: 0;
+    }
+
+    .page-title {
+        font-size: 2em; /* 調整標題字體大小 */
+        font-weight: bold;
+        padding: 10px; /* 調整內側 padding 來增加框框的大小 */
+        display: inline-block; /* 使邊框只包裹文字內容 */
+    }
+
+    .menu-container {
+        display: flex;
+        justify-content: space-around;
+        background-color: #91a9b1;
+        padding: 10px;
+        margin-left: 60px;
+        margin-right: 60px;
+    }
+
+    .menu-button {
+        background-color: white;
+        border: none;
+        padding: 15px; /* 調整按鈕內容的 padding 來增加字體大小 */
+        cursor: pointer;
+        margin: 0;
+        font-size: 1.2em; /* 調整字體大小 */
+    }
+
+    .selected {
+        background-color: rgba(190, 190, 190, 0.7);
+    }
+
+    .mt-3 {
+        margin-top: 1.5rem;
+    }
+
+    .btn-bed {
+        font-size: 1.5em; /* 調整字體大小 */
+        font-weight: bold;
+        background-color: lightgray;
+        display: inline-block; /* 使文本和框框處於同一行 */
+        padding: 10px; /* 調整內側 padding */
+    }
+
+    .date-picker-container {
+        position: relative;
+    }
+
+        .date-picker-container .datepicker {
+            width: 600px !important;
+            height: 600px !important;
+            z-index: 9999;
+            font-size: 16px;
+        }
+
+    .button-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .button-container div {
+            margin-bottom: 10px;
+        }
+
+    #menu table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #menu th,
+    #menu td {
+        padding: 8px;
+        border: none;
+    }
+
+    #menu input[type="checkbox"] {
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+    }
+
+    #menu tr:not(:first-child):hover {
+        background-color: #f0f0f0;
+    }
+
+    #menu tr.selected {
+        background-color: #45539d;
+    }
+
+    #menu button {
+        margin-top: 10px;
+    }
+
+    #menu th:first-child,
+    #menu td:first-child {
+        text-align: left;
+    }
+
+    #menu tr.selected:hover {
+        background-color: #45539d;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .card-container {
+        display: inline-block;
+        padding: 20px;
+        border: 1px solid #ccc;
+    }
+
+    .flex-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .card {
+        width: 200px;
+        margin: 10px;
+    }
+
+    .bed-button {
+        background-color: #d9d9d9;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        margin: 0;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    .color-box {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+        border: 1px solid #000; /* 可以根據需要添加邊框 */
+    }
+
+    .btn {
+        background-color: #e1e7ea; /* 水藍色背景 */
+        color: black;
+        border: 0.5px solid black; /* 黑色細框 */
+        border-radius: 12px; /* 圓邊 */
+        padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
+        margin: 0 15px; /* 調整按鈕之間的間距 */
+        cursor: pointer;
+    }
+</style>

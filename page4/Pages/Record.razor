@@ -1,0 +1,292 @@
+﻿@page "/record"
+@inject NavigationManager NavigationManager
+
+
+<div class="title-container">
+    <h1 class="page-title">化療預約系統</h1>
+</div>
+
+<div class="menu-container">
+    <button class="menu-button selected">選擇化療時段</button>
+    <button class="menu-button">填寫資料</button>
+    <button class="menu-button selected">預約完成</button>
+</div>
+
+<br />
+
+<div class="i-con">
+    <p class="information">基本資料</p>
+</div>
+
+<div class="container">
+    <div class="grid">
+        <!-- 第一行 -->
+        <div class="grid-item">
+            <input type="text" placeholder="預約日期" @bind="inputValues[0]" />
+        </div>
+        <div class="grid-item">
+            <input type="text" placeholder="床位" @bind="inputValues[1]" />
+        </div>
+        <div class="grid-item">
+            <input type="text" placeholder="申請人姓名" @bind="inputValues[2]" />
+        </div>
+
+        <!-- 第二行 -->
+        <div class="grid-item">
+            <input type="text" placeholder="身分證字號" @bind="inputValues[3]" />
+        </div>
+        <div class="grid-item">
+            <input type="text" placeholder="性別" @bind="inputValues[4]" />
+        </div>
+        <div class="grid-item">
+            <input type="text" placeholder="病歷號" @bind="inputValues[5]" />
+        </div>
+
+        <!-- 第三行 -->
+        <div class="grid-item">
+            <input type="text" placeholder="預約床段" @bind="inputValues[6]" />
+        </div>
+        <div class="grid-item">
+            <input type="text" placeholder="生日" @bind="inputValues[7]" />
+        </div>
+        <div class="grid-item">
+            <input type="text" placeholder="手機號碼" @bind="inputValues[8]" />
+        </div>
+    </div>
+</div>
+
+<div class="r-con">
+    <p class="record">生理數據</p>
+</div>
+
+<div class="container-2">
+    <div class="grid-2">
+        <!-- 第一行 -->
+        <div class="grid-item-long">
+            <input type="text" placeholder="病名" @bind="physiologicalData[0]" />
+        </div>
+
+        <!-- 第二行 -->
+        <div class="grid-item-long">
+            <input type="text" placeholder="身高" @bind="physiologicalData[1]" />
+        </div>
+
+        <!-- 第三行 -->
+        <div class="grid-item-long">
+            <input type="text" placeholder="體重" @bind="physiologicalData[2]" />
+        </div>
+
+        <!-- 第四行 -->
+        <div class="grid-item-long">
+            <input type="text" placeholder="BMI" @bind="physiologicalData[3]" />
+        </div>
+
+        <!-- 第五行 -->
+        <div class="grid-item-long">
+            <input type="text" placeholder="血壓" @bind="physiologicalData[4]" />
+        </div>
+
+        <!-- 第六行 -->
+        <div class="grid-item-long">
+            <input type="text" placeholder="脈搏" @bind="physiologicalData[5]" />
+        </div>
+
+        <!-- 第七行 -->
+        <div class="grid-item-long">
+            <input type="text" placeholder="體溫" @bind="physiologicalData[6]" />
+        </div>
+
+        <!-- 第八行 -->
+        <div class="grid-item-long">
+            <input type="text" placeholder="用藥" @bind="physiologicalData[7]" />
+        </div>
+    </div>
+</div>
+
+<div class="bottom-buttons">
+        <button class="button1">上一步</button>
+        <button class="button2" @onclick="NavigateToNextPage">確認</button>
+        <button class="button3">回首頁</button>
+    
+</div>
+
+<br />
+<br />
+
+@code {
+    private string[] inputValues = new string[9];
+    private string[] physiologicalData = new string[8];
+
+
+    private void NavigateToNextPage()
+    {
+        NavigationManager.NavigateTo("/finish");
+    }
+}
+
+
+<style>
+
+    body {
+        margin: 0; /* Remove margin from the body */
+    }
+
+    .title-container {
+        background-color: #acc7d0;
+        text-align: center;
+        padding: 20px;
+        margin-bottom: 10px; /* Add margin at the bottom */
+        margin-top: 0;
+    }
+
+    .page-title {
+        font-size: 1.5em; /* Decrease font size */
+    }
+
+    .menu-container {
+        display: flex;
+        justify-content: space-around;
+        background-color: #90aab0;
+        padding: 10px;
+        margin-left: 60px; /* Add margin to the left */
+        margin-right: 60px; /* Add margin to the right */
+    }
+
+    .menu-button {
+        background-color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        margin: 0; /* Reset margin for the buttons */
+    }
+
+    .selected {
+        background-color: rgba(190, 190, 190, 0.7); /* Set the background color for the selected button */
+    }
+
+    .i-con {
+        position: relative;
+        margin-bottom: -5px;
+    }
+
+    .information {
+        background-color: #828bbe;
+        padding: 10px; /* 可以添加 padding 以增加文字與邊框的間距 */
+        display: inline-block;
+        border-radius: 10px;
+        color: white;
+    }
+
+    .container {
+        border-radius: 10px;
+        width: 95%;
+        height: 20vw; /* 設定大框框的高度 */
+        margin: -50px 7px 10px 7px;
+        background-color: #d9d9d9; /* 設定大框框的灰色背景色 */
+        display: flex;
+        flex-wrap: wrap;
+        grid-gap: 20px; /* 調整格子之間的間距 */
+        justify-content: center; /* 將內容置中 */
+        align-items: center; /* 將內容置中 */
+    }
+
+    .grid {
+        margin-top: -8%;
+        display: grid; /* 使用 Grid 佈局 */
+        grid-template-columns: repeat(3, 1fr); /* 三列等寬 */
+        grid-template-rows: repeat(3, 1fr); /* 三行等高 */
+        row-gap: 3vw; /* 格子之間的間隔 */
+        column-gap: 2vw;
+        position: relative; /* 添加相對位置 */
+        top: 9vw; /* 上移一半的高度 */
+        left: 32vw; /* 左移一半的寬度 */
+        transform: translate(-50%, -50%); /* 居中定位 */
+    }
+
+    .grid-item {
+        width: 30%;
+        background-color: white; /* 白色背景 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 40%;
+    }
+
+    .r-con {
+        position: relative;
+        margin-bottom: -5px;
+    }
+
+    .record {
+        background-color: #828bbe;
+        padding: 10px; /* 可以添加 padding 以增加文字與邊框的間距 */
+        display: inline-block;
+        border-radius: 10px;
+        color: white;
+    }
+
+    .container-2 {
+        border-radius: 10px;
+        width: 95%;
+        height: 46vw; /* 設定大框框的高度 */
+        margin: -50px 7px 10px 7px;
+        background-color: #d9d9d9; /* 設定大框框的灰色背景色 */
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .grid-2 {
+        display: flex; /* 使用 Grid 佈局 */
+        flex-direction: column;
+        gap: 20px;
+        margin-left: 110px;
+        margin-top: 40px;
+    }
+
+    .grid-item-long {
+        /* 其他樣式 */
+        width: calc(100% - 20px); /* 調整每個長框框的寬度，並考慮到間距 */
+        height: auto; /* 調整長框框的高度 */
+        background-color: white;
+        display: flex;
+        margin-left: 110px;
+        margin-top: 40px;
+        margin: 10px; /* 調整每個長框框之間的距離 */
+    }
+
+    .bottom-buttons {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px; /* 調整按鈕與上面內容的間距 */
+    }
+
+    .button1 {
+        background-color: #e1e7ea; /* 水藍色背景 */
+        color: black;
+        border: 0.5px solid black; /* 黑色細框 */
+        border-radius: 12px; /* 圓邊 */
+        padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
+        margin: 0 15px; /* 調整按鈕之間的間距 */
+        cursor: pointer;
+    }
+
+    .button2 {
+        background-color: #e1e7ea; /* 水藍色背景 */
+        color: black;
+        border: 0.5px solid black; /* 黑色細框 */
+        border-radius: 12px; /* 圓邊 */
+        padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
+        margin: 0 15px; /* 調整按鈕之間的間距 */
+        cursor: pointer;
+    }
+
+    .button3 {
+        background-color: #e1e7ea; /* 水藍色背景 */
+        color: black;
+        border: 0.5px solid black; /* 黑色細框 */
+        border-radius: 12px; /* 圓邊 */
+        padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
+        margin: 0 15px; /* 調整按鈕之間的間距 */
+        cursor: pointer;
+    }
+</style>

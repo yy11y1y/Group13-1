@@ -1,0 +1,70 @@
+﻿@page "/"
+@inject NavigationManager Navigation
+
+<h3 style="color: #000000; background-color: #acc7d0; padding: 10px; text-align: center; display: block; width: 100%;">化療病床預約平台</h3>
+<br>
+<h4 style="text-align: center;">登入資料</h4>
+<br />
+
+<div style="display: flex; flex-direction: column; align-items: center;">
+    <div class="form-group">
+        <label>身分證字號：</label>
+        <input @bind="IdNumber" />
+        <br />
+        @if (!IsValidIdFormat(IdNumber) && ShowIdError)
+        {
+            <center><p style="color: red;  font-size:13px;">※身分證格式不正確，請重新輸入</p></center>
+        }
+    </div>
+    <br />
+
+    <div class="form-group">
+        <label>密⠀⠀⠀⠀碼：</label>
+        <input type="password" @bind="Password" />
+    </div>
+    <br />
+
+    <button @onclick="NextStep" class="button">登入</button>
+
+</div>
+
+@code {
+    private string IdNumber { get; set; } = string.Empty;
+    private string Password { get; set; } = string.Empty;
+    private bool ShowIdError { get; set; } = false;
+
+    private bool IsValidIdFormat(string idNumber)
+    {
+        // 身分證格式檢查，第一個字母大寫 + 9 位數字
+        return System.Text.RegularExpressions.Regex.IsMatch(idNumber, "^[A-Z]\\d{9}$");
+    }
+
+    private void NextStep()
+    {
+        // 檢查身分證格式
+        if (!IsValidIdFormat(IdNumber))
+        {
+            // 如果格式不正確，顯示錯誤信息
+            ShowIdError = true;
+            return;
+        }
+
+        // 重置錯誤顯示
+        ShowIdError = false;
+
+        // 導航至 Scale 頁面
+        Navigation.NavigateTo("/form");
+    }
+}
+
+<style>
+    .button {
+        background-color: #e1e7ea; /* 水藍色背景 */
+        color: black;
+        border: 0.5px solid black; /* 黑色細框 */
+        border-radius: 12px; /* 圓邊 */
+        padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
+        margin: 0 15px; /* 調整按鈕之間的間距 */
+        cursor: pointer;
+    }
+</style>
