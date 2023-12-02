@@ -19,41 +19,66 @@
 </div>
 
 <div class="container">
-    <div class="grid">
+    <table>
         <!-- 第一行 -->
-        <div class="grid-item">
-            <input type="text" placeholder="預約日期" @bind="inputValues[0]" />
-        </div>
-        <div class="grid-item">
-            <input type="text" placeholder="床位" @bind="inputValues[1]" />
-        </div>
-        <div class="grid-item">
-            <input type="text" placeholder="申請人姓名" @bind="inputValues[2]" />
-        </div>
+        <tr>
+            <th>
+                <div class="grid-item">
+                    <input type="date" class="dir" @bind="inputDateTime" />
+                </div>
+            </th>
+            <th>
+                <div class="grid-item">
+                    <input type="text" class="dir" placeholder="床位" @bind="inputValues[1]" />
+                </div>
+            </th>
+            <th>
+                <div class="grid-item">
+                    <input type="text" class="dir" placeholder="申請人姓名" @bind="inputValues[2]" />
+                </div>
+            </th>
+        </tr>
 
         <!-- 第二行 -->
-        <div class="grid-item">
-            <input type="text" placeholder="身分證字號" @bind="inputValues[3]" />
-        </div>
-        <div class="grid-item">
-            <input type="text" placeholder="性別" @bind="inputValues[4]" />
-        </div>
-        <div class="grid-item">
-            <input type="text" placeholder="病歷號" @bind="inputValues[5]" />
-        </div>
+        <tr>
+            <td>
+                <div class="grid-item">
+                    <input type="text" class="dir" placeholder="身分證字號" @bind="inputValues[3]" />
+                </div>
+            </td>
+            <td>
+                <div class="grid-item">
+                    <input type="text" class="dir" placeholder="性別" @bind="inputValues[4]" />
+                </div>
+            </td>
+            <td>
+                <div class="grid-item">
+                    <input type="text" class="dir" placeholder="病歷號" @bind="inputValues[5]" />
+                </div>
+            </td>
+        </tr>
 
         <!-- 第三行 -->
-        <div class="grid-item">
-            <input type="text" placeholder="預約床段" @bind="inputValues[6]" />
-        </div>
-        <div class="grid-item">
-            <input type="text" placeholder="生日" @bind="inputValues[7]" />
-        </div>
-        <div class="grid-item">
-            <input type="text" placeholder="手機號碼" @bind="inputValues[8]" />
-        </div>
-    </div>
+        <tr>
+            <td>
+                <div class="grid-item">
+                    <input type="text" class="dir" placeholder="預約床段" @bind="inputValues[6]" />
+                </div>
+            </td>
+            <td>
+                <div class="grid-item">
+                    <input type="text" class="dir" placeholder="生日" @bind="inputValues[7]" />
+                </div>
+            </td>
+            <td>
+                <div class="grid-item">
+                    <input type="text" class="dir" placeholder="手機號碼" @bind="inputValues[8]" />
+                </div>
+            </td>
+        </tr>
+    </table>
 </div>
+
 
 <div class="r-con">
     <p class="record">生理數據</p>
@@ -104,10 +129,10 @@
 </div>
 
 <div class="bottom-buttons">
-        <button class="button1">上一步</button>
-        <button class="button2" @onclick="NavigateToNextPage">確認</button>
-        <button class="button3">回首頁</button>
-    
+    <button class="button1">上一步</button>
+    <button class="button2" @onclick="NavigateToNextPage">確認</button>
+    <button class="button3">回首頁</button>
+
 </div>
 
 <br />
@@ -116,6 +141,7 @@
 @code {
     private string[] inputValues = new string[9];
     private string[] physiologicalData = new string[8];
+    private DateTime inputDateTime;
 
 
     private void NavigateToNextPage()
@@ -180,7 +206,7 @@
     .container {
         border-radius: 10px;
         width: 95%;
-        height: 20vw; /* 設定大框框的高度 */
+        height: 325px; /* 設定大框框的高度 */
         margin: -50px 7px 10px 7px;
         background-color: #d9d9d9; /* 設定大框框的灰色背景色 */
         display: flex;
@@ -195,6 +221,7 @@
         display: grid; /* 使用 Grid 佈局 */
         grid-template-columns: repeat(3, 1fr); /* 三列等寬 */
         grid-template-rows: repeat(3, 1fr); /* 三行等高 */
+        grid-gap: 20px;
         row-gap: 3vw; /* 格子之間的間隔 */
         column-gap: 2vw;
         position: relative; /* 添加相對位置 */
@@ -203,13 +230,8 @@
         transform: translate(-50%, -50%); /* 居中定位 */
     }
 
-    .grid-item {
-        width: 30%;
-        background-color: white; /* 白色背景 */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-left: 40%;
+    th, td {
+        padding: 2vw;
     }
 
     .r-con {
@@ -288,5 +310,9 @@
         padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
         margin: 0 15px; /* 調整按鈕之間的間距 */
         cursor: pointer;
+    }
+
+    input.dir {
+        width: 150px;
     }
 </style>
