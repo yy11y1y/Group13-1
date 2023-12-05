@@ -1,0 +1,154 @@
+﻿<head>
+    <!-- 其他標籤... -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+</head>
+
+@if (showPopup)
+{
+    <div class="overlay">
+        <div class="popup">
+            <div class="popup-header">
+                <span class="close" @onclick="ClosePopup">&times;</span>
+                <i class="fas fa-exclamation-triangle" style="color: orange; font-size: 30px; margin-right: 370px; margin-top:-10px; margin-bottom:20px;"></i>
+                <p style="text-align: center;">系統將不會保留您的預約資訊，確定要刪除嗎？</p>
+            </div>
+
+            <br />
+            <button @onclick="ClosePopup" class="btn">確定</button>
+            <button @onclick="ClosePopup" class="btn">刪除</button>
+        </div>
+    </div>
+}
+
+
+@code {
+    [Parameter] public bool showPopup { get; set; }
+    [Parameter] public EventCallback OnClosePopup { get; set; }
+
+    private string Name = "";
+    private string caseNumber = "";
+
+    [Inject] private NavigationManager NavigationManager { get; set; }
+
+    private void ClosePopup()
+    {
+        showPopup = false;
+        OnClosePopup.InvokeAsync();
+    }
+
+    private void SubmitForm()
+    {
+        NavigationManager.NavigateTo("/record");
+    }
+
+    private void EditRecord(int recordId)
+    {
+        NavigationManager.NavigateTo("/record");
+
+    }
+
+    private void DeleteRecord(int recordId)
+    {
+        // 处理删除按钮的逻辑
+    }
+
+    private void NavigateToDetailsPage(int recordId)
+    {
+        // 導航到詳細頁面，假設您的詳細頁面的路徑為 "/details/{recordId}"
+        NavigationManager.NavigateTo($"/details/{recordId}");
+    }
+
+    private int highlightedRow = -1;
+    private string searchText = "";
+
+    private void HighlightRow(int rowId)
+    {
+        highlightedRow = rowId;
+    }
+
+    private void RemoveHighlight()
+    {
+        highlightedRow = -1;
+    }
+
+    private void SearchRecords()
+    {
+        // 此處可以添加搜索邏輯
+        // 在 records 中根據 searchText 過濾或進行其他搜索操作
+    }
+
+    public class Record
+    {
+        public int Id { get; set; }
+        public string Date { get; set; }
+    }
+}
+
+<style>
+    .popup {
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        position: relative;
+        width: 400px;
+        height:160px;
+        text-align: center;
+        display: inline-block;
+        z-index: 1001;
+    }
+
+    .popup-header {
+        text-align: center;
+    }
+
+        .popup-header h4 {
+            margin: 0;
+        }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .popup-header {
+        text-align: right;
+    }
+
+    .close {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        position: absolute;
+        top: 8px; /* 距離頂部的距離 */
+        right: 20px; /* 距離右側的距離 */
+        cursor: pointer;
+    }
+
+    .popup p {
+        margin: 0;
+    }
+
+    .popup-table-container {
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    .btn {
+        background-color: #e1e7ea; /* 水藍色背景 */
+        color: black;
+        border: 0.5px solid black; /* 黑色細框 */
+        border-radius: 12px; /* 圓邊 */
+        padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
+        margin: 0 15px; /* 調整按鈕之間的間距 */
+        cursor: pointer;
+    }
+</style>

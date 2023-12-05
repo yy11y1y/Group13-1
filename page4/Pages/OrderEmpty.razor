@@ -1,0 +1,52 @@
+﻿@page "/orderempty"
+@inject NavigationManager NavigationManager
+
+
+<div class="title-container">
+    <h1 class="page-title">化療預約系統</h1>
+</div>
+
+<br />
+<br />
+<br />
+<center><p>尚無預約資料！</p></center>
+<center><p>請回首頁點擊馬上預約或從選單進入化療預約時段</p></center>
+<br />
+<br />
+<center><button class="button">回首頁</button></center>
+
+@code {
+    private void NavigateToNextPage()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
+
+<style>
+    body {
+        margin: 0; /* Remove margin from the body */
+    }
+
+    .title-container {
+        background-color: #acc7d0;
+        text-align: center;
+        padding: 20px;
+        margin-bottom: 10px; /* Add margin at the bottom */
+        margin-top: 0;
+    }
+
+    .page-title {
+        font-size: 1.5em; /* Decrease font size */
+    }
+
+
+    .button {
+        background-color: #e1e7ea; /* 水藍色背景 */
+        color: black;
+        border: 0.5px solid black; /* 黑色細框 */
+        border-radius: 12px; /* 圓邊 */
+        padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
+        margin: 0 15px; /* 調整按鈕之間的間距 */
+        cursor: pointer;
+    }
+</style>

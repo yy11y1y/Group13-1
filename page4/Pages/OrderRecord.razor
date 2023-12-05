@@ -1,0 +1,142 @@
+﻿@page "/orderrecord"
+@inject NavigationManager NavigationManager
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-......................" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<div class="title-container">
+    <h1 class="page-title">化療預約系統</h1>
+</div>
+
+<br />
+<center><p>我的預約</p></center>
+<center><p> A123456789</p></center>
+<br />
+<table class="table1">
+    <thead>
+        <tr>
+            <th>序號</th>
+            <th>化療日期</th>
+            <th>床位</th>
+            <th>時段</th>
+            <th>入院前評估表單</th>
+            <th>刪除</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>2023/12/3</td>
+            <td>C</td>
+            <td>14:00-16:30</td>
+            <td><NavLink href="/form">點擊填寫表單</NavLink></td>
+            <td>
+                <button class="trash" @onclick="() => TogglePopup()">
+                    <i class="fas fa-trash-alt trash-icon"></i>
+                </button>
+            </td>
+
+        </tr>
+    </tbody>
+    <tbody>
+        <tr>
+            <td>2</td>
+            <td>2023/12/25</td>
+            <td>A</td>
+            <td>9:30-12:00</td>
+            <td>請於日期前一天填寫表單</td>
+            <td>
+                <button class="trash" @onclick="NavigateToNextPage3">
+                    <i class="fas fa-trash-alt trash-icon"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+    <center><button @onclick="NavigateToNextPage" class="button">回首頁</button></center>
+</table>
+
+
+<DropDownMenu ShowPopup="@showPopup" OnClosePopup="ClosePopup" />
+
+@code {
+    private bool showPopup = false;
+    public async Task TogglePopup()
+    {
+        showPopup = !showPopup;
+    }
+    private void ClosePopup()
+    {
+        showPopup = false;
+    }
+
+
+    private void NavigateToNextPage()
+    {
+        NavigationManager.NavigateTo("/home");
+    }
+
+    private void NavigateToNextPage3()
+    {
+        NavigationManager.NavigateTo("/orderrecord");
+    }
+
+    void DeleteItem(object item)
+    {
+        // 在這裡實現你的刪除邏輯
+        Console.WriteLine("Item deleted!"); // 這裡只是一個示例，請根據你的需求修改
+    }
+
+
+}
+
+<style>
+    body {
+        margin: 0; /* Remove margin from the body */
+    }
+
+    .title-container {
+        background-color: #acc7d0;
+        text-align: center;
+        padding: 20px;
+        margin-bottom: 10px; /* Add margin at the bottom */
+        margin-top: 0;
+    }
+
+    .page-title {
+        font-size: 1.5em; /* Decrease font size */
+    }
+
+
+    .button {
+        background-color: #e1e7ea; /* 水藍色背景 */
+        color: black;
+        border: 0.5px solid black; /* 黑色細框 */
+        border-radius: 12px; /* 圓邊 */
+        padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
+        margin: 0 15px; /* 調整按鈕之間的間距 */
+        cursor: pointer;
+    }
+
+    .table1 {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        .table1 th, .table1 td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .table1 th {
+            background-color: #f2f2f2; /* 可選的表頭背景色 */
+        }
+
+    .trash {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem; /* 調整圖示大小 */
+    }
+</style>

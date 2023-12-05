@@ -122,29 +122,26 @@
         </tbody>
     </table>
 </div>
-
-<div style="display: flex; justify-content: center;">
-    <button @onclick="SubmitForm" class="button">確認</button>
-    <button @onclick="NavigateToHome" class="button">回首頁</button>
-</div>
-
-
-<div style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
+<center>
     @if (IsFormSubmitted && IsFormValid())
     {
-        <div style="color: #00A600; padding: 10px; margin-bottom: 10px;">請進行時段預約。</div>
-        <div style="display: flex; justify-content: center;">
-            <button @onclick="NavigateToReservation" style="background-color: #E0E0E0; color: #272727; border: 1px solid black; margin-right: 10px;">預約</button>
-        </div>
-
-        <br>
+        <p style="color: green;  font-size:20px;">生理數值皆正常。</p>
+        <p style="color: black;  font-size:13px;">請攜帶相關證件準時報到</p>
 
         <br>
     }
     else if (IsFormSubmitted)
     {
-        <div style="color: #FF0000; padding: 10px; margin-bottom: 10px;">尚不適合進行化療，請洽詢護理人員再進行預約。</div>
+        <p style="color: red;  font-size:20px;">生理數值異常。</p>
+        <p style="color: black;  font-size:13px;">系統將取消您明天的預約</p>
+        <p style="color: black;  font-size:13px;">請等候醫護人員主動聯繫 或撥打醫院電話03-1234567洽詢</p>
     }
+</center>
+<div style="display: flex; justify-content: center;">
+    <button @onclick="SubmitForm" class="button">儲存</button>
+    <button @onclick="NavigateToHome" class="button">回首頁</button>
+    <button @onclick="NavigateToIndex" class="button">登出</button>
+
 </div>
 
 <br />
@@ -242,6 +239,11 @@
     }
 
     private void NavigateToHome()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    private void NavigateToIndex()
     {
         Navigation.NavigateTo("/");
     }
