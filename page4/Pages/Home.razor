@@ -1,0 +1,133 @@
+﻿@page "/home"
+@inherits LayoutComponentBase
+
+@inject IWebAssemblyHostEnvironment HostEnvironment
+
+@if (HostEnvironment.IsDevelopment())
+{
+    <p>This is the development environment.</p>
+}
+else
+{
+    <p>This is not the development environment.</p>
+}
+
+<h3 style="color: #000000; background-color: #acc7d0; padding: 10px; text-align: center; display: block; width: 100%;">化療病床預約平台</h3>
+<br>
+<h4 style="text-align: center;">登入資料</h4>
+<br />
+
+<div style="display: flex; justify-content: center; align-items: center;">
+    <p>歡迎 @SharedData.IdNumber</p>
+</div>
+
+<br />
+
+<div class="square-box-container">
+    <button class="square-box" @onclick="NavigateToOtherPage1">
+        <span class="oi oi-list-rich" style="color: #395C65;"></span>
+        <p>評估表單</p>
+    </button>
+
+    <button class="square-box" @onclick="NavigateToOtherPage2">
+        <span class="oi oi-plus" style="color: #395C65;"></span>
+        <p>馬上預約</p>
+    </button>
+
+    <button class="square-box" @onclick="NavigateToOtherPage3">
+        <span class="oi oi-clock" style="color: #395C65;"></span>
+        <p>我的預約</p>
+    </button>
+</div>
+
+<div style="display: flex; justify-content: center; align-items: center; ">
+    <button @onclick="NavigateToOtherPagehome" style="">登出</button>
+</div>
+
+<style>
+    .square-box-container {
+        display: flex; /* 水平排列 */
+        justify-content: center; /* 水平對齊 */
+    }
+
+    .square-box {
+        width: 180px;
+        height: 180px;
+        background-color: #CEDFE3;
+        color: #636a62;
+        text-align: center;
+        display: flex;
+        align-items: center; /* 垂直對齊*/
+        justify-content: center;
+        margin-bottom: 100px;
+        margin-left: 30px;
+        position: relative;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; /* 添加過渡效果 */
+        border: 2px solid #636a62; /* 邊框初始顏色 */
+    }
+
+        .square-box:hover {
+            background-color: rgb(134, 155, 167, 0.6); /* 滑鼠懸停時的背景色 */
+            color: white; /* 滑鼠懸停時的文字顏色 */
+            border-color: #818F98; /* 滑鼠懸停時的邊框顏色 */
+        }
+
+            .square-box:hover .oi {
+                color: white; /* 滑鼠懸停時的符號顏色 */
+            }
+
+        .square-box p {
+            font-size: 24px;
+            margin-bottom: -50px; /* 調整圖標和文字之間的距離 */
+            margin-left: 10px;
+            position: absolute;
+        }
+
+    .oi {
+        width: 2rem;
+        font-size: 1.2rem;
+        color: #6b6b6b;
+        vertical-align: text-top;
+        top: -15px;
+        transition: color 0.3s ease; /* 添加過渡效果 */
+    }
+</style>
+
+
+@code {
+    @inject NavigationManager NavigationManager
+    private NavigationManager? Navigation { get; set; }
+
+
+    private void NavigateToOtherPage1()
+    {
+        NavigationManager.NavigateTo("/form");
+    }
+
+    private void NavigateToOtherPage2()
+    {
+        if (NavigationManager != null)
+        {
+            NavigationManager.NavigateTo("/record");
+        }
+        else
+        {
+            // 在這裡處理 NavigationManager 為 null 的情況
+        }
+    }
+
+    private void NavigateToOtherPage3()
+    {
+
+        NavigationManager.NavigateTo("/orderrecord");
+
+    }
+
+    private void NavigateToOtherPagehome()
+    {
+
+        NavigationManager.NavigateTo("/userlogin");
+    }
+
+}

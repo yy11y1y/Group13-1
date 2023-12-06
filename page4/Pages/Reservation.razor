@@ -8,27 +8,71 @@
 </div>
 
 <div class="menu-container">
-    <button class="menu-button">選擇化療時段</button>
-    <button class="menu-button selected">填寫資料</button>
-    <button class="menu-button selected">預約完成</button>
+    <div class="menu-option selected">填寫資料</div>
+    <div class="menu-option">選擇化療時段</div>
+    <div class="menu-option selected">預約完成</div>
 </div>
 
 <div class="mt-3">
     <label for="selectedDate" class="btn-bed">選擇日期</label>
-    <div class="color-box" style="background-color: #ffffff;"></div> ：可預約
+    <div class="color-box" style="background-color: #d9d9d9;"></div> ：今日
     <div class="color-box" style="background-color: #c5c2c2;"></div> ：已額滿
+    <div class="color-box" style="background-color: #7188ba;"></div> ：可選擇
     <div class="color-box" style="background-color: #45539d;"></div> ：已選擇
-    <div class="date-picker-container datepicker">
-        <InputDate id="selectedDate" @bind-Value="selectedDate" />
-    </div>
+</div>
+
+<div>
+    <input type="text" placeholder="@GetPlaceholderText()" @onclick="ToggleCalendar" readonly class="custom-input" />
+</div>
+
+<div>
+    <span class="arrow" @onmouseover="() => ArrowHover(true)" @onmouseout="() => ArrowHover(false)" @onclick="() => ChangeMonth(-1)">❮</span>
+    <span class="month-year">@currentDate.ToString("MMMM yyyy")</span>
+    <span class="arrow" @onmouseover="() => ArrowHover(true)" @onmouseout="() => ArrowHover(false)" @onclick="() => ChangeMonth(1)">❯</span>
+</div>
+
+<div id="calendar-container" style="calendar-container;">
+    <table>
+        <thead>
+            <tr>
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < 6; i++)
+            {
+                <tr>
+                    @for (int j = 0; j < 7; j++)
+                    {
+                        var daysInMonth = DateTime.DaysInMonth(currentDate.Year, currentDate.Month);
+                        var day = i * 7 + j + 1 - (int)new DateTime(currentDate.Year, currentDate.Month, 1).DayOfWeek;
+                        var currentDay = day >= 1 && day <= daysInMonth
+                        ? new DateTime(currentDate.Year, currentDate.Month, day)
+                        : (DateTime?)null;
+
+                        <td class="@(currentDay?.Month != currentDate.Month ? "other-month" : "") @(currentDay?.Date == currentDate.Date ? "today" : "")">
+                            @if (currentDay.HasValue)
+                            {
+                                <button @onclick="() => SelectDate(currentDay.Value)" class="date-button @(selectedDate == currentDay ? "selected" : "")">
+                                    @currentDay.Value.Day
+                                </button>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 <div class="mt-3">
     <p class="btn-bed">選擇床段</p>
-    <div class="color-box" style="background-color: #ffffff;"></div> ：尚未預約
-    <div class="color-box" style="background-color: #bdbaba;"></div> ：已額滿
-    <div class="color-box" style="background-color: #45539d;"></div> ：已選擇
-    <div class="color-box" style="background-color: #7188ba;"></div> ：可選擇
     <p>每半小時一個床段，若需要選擇多個床段，請選擇相鄰時段。</p>
 </div>
 
@@ -69,16 +113,59 @@
 <div id="datepicker" style="display: none;"></div>
 
 <div class="mt-3 text-center">
+    <button class="btn btn-primary" @onclick="GoToRecord">
+        上一步
+    </button>
     <button class="btn btn-primary" @onclick="GoToHomePage">
         回首頁
     </button>
-    &nbsp;
     <button class="btn btn-primary" @onclick="GoToNextStep">
         下一步
     </button>
 </div>
+<br />
+<br />
 
 @code {
+
+    private DateTime currentDate = DateTime.Now;
+    private DateTime? selectedDate;
+
+    private string GetPlaceholderText()
+    {
+        return selectedDate?.ToString("yyyy/MM/dd") ?? "請點選未來一個月內預約日期";
+    }
+
+    private void ChangeMonth(int offset)
+    {
+        currentDate = currentDate.AddMonths(offset);
+        JSRuntime.InvokeVoidAsync("scrollToCalendar");
+    }
+
+    private void ToggleCalendar()
+    {
+        // Implement your logic to show/hide the calendar
+    }
+
+    private void SelectDate(DateTime date)
+    {
+        if (selectedDate == date)
+        {
+            selectedDate = null; // 取消選擇
+        }
+        else
+        {
+            selectedDate = date;
+        }
+    }
+
+    private bool isArrowHovered = false;
+
+    private void ArrowHover(bool isHovered)
+    {
+        isArrowHovered = isHovered;
+    }
+
     private Dictionary<string, Dictionary<string, bool>> checkboxDictionaries;
 
     private Dictionary<string, List<string>> selectedTimeSlots = new Dictionary<string, List<string>>();
@@ -91,8 +178,6 @@
         "15:00-15:30", "15:30-16:00", "16:00-16:30", "16:30-17:00"
     };
 
-
-    private DateTime selectedDate { get; set; } = DateTime.Now;
 
     protected override void OnInitialized()
     {
@@ -166,7 +251,10 @@
     {
         await JSRuntime.InvokeVoidAsync("ShowDatePicker");
     }
-
+    private void GoToRecord()
+    {
+        NavigationManager.NavigateTo("/record");
+    }
     private void GoToHomePage()
     {
         NavigationManager.NavigateTo("/");
@@ -174,7 +262,7 @@
 
     private void GoToNextStep()
     {
-        NavigationManager.NavigateTo("/record");
+        NavigationManager.NavigateTo("/finish");
     }
 
 
@@ -184,38 +272,45 @@
     .title-container {
         background-color: #acc7d0;
         text-align: center;
-        padding: 30px; /* 調整上下 padding 來增加標題的高度 */
-        margin-bottom: 10px;
+        padding: 80px;
+        margin-bottom: 50px;
         margin-top: 0;
+
     }
 
     .page-title {
-        font-size: 2em; /* 調整標題字體大小 */
+        font-size: 3em;
         font-weight: bold;
-        padding: 10px; /* 調整內側 padding 來增加框框的大小 */
-        display: inline-block; /* 使邊框只包裹文字內容 */
+        padding: 10px;
+        display: inline-block;
     }
 
     .menu-container {
         display: flex;
         justify-content: space-around;
         background-color: #91a9b1;
-        padding: 10px;
+        padding: 20px;
         margin-left: 60px;
         margin-right: 60px;
     }
 
-    .menu-button {
+    .menu-option {
+        flex-grow: 1;
+        position: relative;
         background-color: white;
-        border: none;
-        padding: 15px; /* 調整按鈕內容的 padding 來增加字體大小 */
+        padding: 25px;
         cursor: pointer;
-        margin: 0;
-        font-size: 1.2em; /* 調整字體大小 */
+        margin: 10 15px;
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #000000;
+        text-align: center;
+        clip-path: polygon(0% 0%, 10% 50%, 0% 100%, 90% 100%, 100% 50%, 90% 0%);
     }
 
     .selected {
-        background-color: rgba(190, 190, 190, 0.7);
+        background-color: #c0cfd3;
+        color: #91a9b1;
     }
 
     .mt-3 {
@@ -229,6 +324,7 @@
         display: inline-block; /* 使文本和框框處於同一行 */
         padding: 10px; /* 調整內側 padding */
     }
+
 
     .date-picker-container {
         position: relative;
@@ -334,5 +430,78 @@
         padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
         margin: 0 15px; /* 調整按鈕之間的間距 */
         cursor: pointer;
+    }
+
+
+    .arrow {
+        cursor: pointer;
+        color: @(isArrowHovered ? "red" : "inherit");
+    }
+
+    .month-year {
+        margin: 0 10px;
+    }
+
+    table {
+        width: 70%;
+        margin: 20px auto;
+        border-collapse: collapse;/* 靠左 */
+    }
+
+    .calendar-container {
+        clear: both;
+        text-align: left; /* 將文本靠左對齊 */
+    }
+
+    th, td {
+        padding: 0px;
+        text-align: center;
+        border: 1px solid #ddd;
+        width: 14.2857%;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    td {
+        height: 80px;
+    }
+
+    .today .date-button {
+        background-color: #d9d9d9; /* 今日日期格子為綠色 */
+    }
+
+    .other-month {
+        color: #aaa;
+    }
+
+    .date-button {
+        background-color: inherit;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        height: 100%; /* 調整高度 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .date-button:hover {
+            background-color: #828cc0; /* 箭頭經過時紅色 */
+        }
+
+        .date-button.selected {
+            background-color: #45539d; /* 點擊後保持藍色 */
+        }
+
+    input {
+        margin-top: 10px;
+        padding: 5px;
+    }
+
+    .custom-input {
+        width: 30%;
+        padding: 10px;
     }
 </style>

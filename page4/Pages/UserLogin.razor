@@ -1,0 +1,87 @@
+﻿@page "/userLogin"
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@inherits LayoutComponentBase
+
+
+<h3 style="color: #000000; background-color: #acc7d0; padding: 10px; text-align: center; display: block; width: 100%;">化療病床預約平台</h3>
+<br>
+<h4 style="text-align: center;">登入資料</h4>
+
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4 login-box">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div class="form-group">
+                    <label>身分證字號：</label>
+                    <div>
+                        <input @bind="IdNumber" />
+                    </div>
+                    @if (!IsValidIdFormat(IdNumber) && ShowIdError)
+                    {
+                        <center><p style="color: red;  font-size:13px;">※身分證格式不正確，請重新輸入</p></center>
+                    }
+                </div>
+                <br />
+
+                <div class="form-group">
+                    <label>密⠀⠀⠀⠀⠀碼：</label>
+                    <div>
+                        <input type="password" @bind="Password" />
+                    </div>
+                </div>
+                <br />
+
+                <button @onclick="NextStep" style="background-color: #E0E0E0; color: #272727; border: 1px solid black; margin-right: 10px;">登入</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string IdNumber { get; set; } = string.Empty;
+    private string Password { get; set; } = string.Empty;
+    private bool ShowIdError { get; set; } = false;
+
+    private bool IsValidIdFormat(string idNumber)
+    {
+        // 身分證格式檢查，第一個字母大寫 + 9 位數字
+        return System.Text.RegularExpressions.Regex.IsMatch(idNumber, "^[A-Z]\\d{9}$");
+    }
+
+    private void NextStep()
+    {
+        // 檢查身分證格式
+        if (!IsValidIdFormat(IdNumber))
+        {
+            // 如果格式不正確，顯示錯誤信息
+            ShowIdError = true;
+            return;
+        }
+
+        // 重置錯誤顯示
+        ShowIdError = false;
+
+        SharedData.IdNumber = IdNumber; // 將使用者輸入的身分證字號設定到 SharedData
+        Navigation.NavigateTo("/home");
+    }
+}
+
+<div style="margin-left:80px;">
+    <!-- Adjust the margin to account for the sidebar width -->
+    <!-- Your existing login form code here -->
+</div>
+
+
+
+<style>
+     .login-box {
+         background-color: #f0f0f0; /* 淺灰色 */
+         padding: 20px;
+         border-radius: 8px; /* 可以加入邊框半徑，使框框的邊角更圓滑 */
+         margin-top: 50px;
+     }
+     
+</style>
+
