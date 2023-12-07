@@ -1,19 +1,9 @@
 ﻿@page "/home"
 @inherits LayoutComponentBase
-
-@inject IWebAssemblyHostEnvironment HostEnvironment
-
-@if (HostEnvironment.IsDevelopment())
-{
-    <p>This is the development environment.</p>
-}
-else
-{
-    <p>This is not the development environment.</p>
-}
-
-<h3 style="color: #000000; background-color: #acc7d0; padding: 10px; text-align: center; display: block; width: 100%;">化療病床預約平台</h3>
-<br>
+<div class="title-container">
+    <h1 class="page-title">化療病床預約系統</h1>
+</div>
+<br />
 <h4 style="text-align: center;">登入資料</h4>
 <br />
 
@@ -41,10 +31,23 @@ else
 </div>
 
 <div style="display: flex; justify-content: center; align-items: center; ">
-    <button @onclick="NavigateToOtherPagehome" style="">登出</button>
+    <button @onclick="NavigateToOtherPagehome" class="button">登出</button>
 </div>
 
 <style>
+
+    .title-container {
+        background-color: #acc7d0;
+        text-align: center;
+        padding: 35px;
+        margin-bottom: 10px; /* Add margin at the bottom */
+        margin-top: 0;
+    }
+
+    .page-title {
+        font-size: 1.9em; /* Decrease font size */
+        color: #3d474a;
+    }
     .square-box-container {
         display: flex; /* 水平排列 */
         justify-content: center; /* 水平對齊 */
@@ -91,6 +94,16 @@ else
         vertical-align: text-top;
         top: -15px;
         transition: color 0.3s ease; /* 添加過渡效果 */
+    }
+
+    .button {
+        background-color: #e1e7ea; /* 水藍色背景 */
+        color: black;
+        border: 0.5px solid black; /* 黑色細框 */
+        border-radius: 12px; /* 圓邊 */
+        padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
+        margin: 0 15px; /* 調整按鈕之間的間距 */
+        cursor: pointer;
     }
 </style>
 

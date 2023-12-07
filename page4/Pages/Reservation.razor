@@ -257,7 +257,7 @@
     }
     private void GoToHomePage()
     {
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/home");
     }
 
     private void GoToNextStep()
@@ -272,24 +272,21 @@
     .title-container {
         background-color: #acc7d0;
         text-align: center;
-        padding: 80px;
-        margin-bottom: 50px;
+        padding: 35px;
+        margin-bottom: 10px; /* Add margin at the bottom */
         margin-top: 0;
-
     }
 
     .page-title {
-        font-size: 3em;
-        font-weight: bold;
-        padding: 10px;
-        display: inline-block;
+        font-size: 1.9em; /* Decrease font size */
+        color: #3d474a;
     }
 
     .menu-container {
         display: flex;
         justify-content: space-around;
         background-color: #91a9b1;
-        padding: 20px;
+        padding: 11px;
         margin-left: 60px;
         margin-right: 60px;
     }
@@ -298,7 +295,7 @@
         flex-grow: 1;
         position: relative;
         background-color: white;
-        padding: 25px;
+        padding: 10px;
         cursor: pointer;
         margin: 10 15px;
         font-size: 1.5em;

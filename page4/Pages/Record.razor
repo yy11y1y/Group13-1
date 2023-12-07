@@ -1,6 +1,6 @@
 ﻿@page "/record"
 @inject NavigationManager NavigationManager
-
+@inject HttpClient Http
 
 <div class="title-container">
     <h1 class="page-title">化療預約系統</h1>
@@ -24,17 +24,17 @@
         <tr>
             <th>
                 <div class="grid-item">
-                    <input type="date" class="dir" @bind="inputDateTime" />
+                    <input type="text" class="dir" placeholder="申請人姓名" @bind="inputValues[1]" />
                 </div>
             </th>
             <th>
                 <div class="grid-item">
-                    <input type="text" class="dir" placeholder="床位" @bind="inputValues[1]" />
+                    <input type="text" class="dir" placeholder="性別" @bind="inputValues[2]" />
                 </div>
             </th>
             <th>
                 <div class="grid-item">
-                    <input type="text" class="dir" placeholder="申請人姓名" @bind="inputValues[2]" />
+                    <input type="text" class="dir" placeholder="身分證字號" @bind="inputValues[3]" />
                 </div>
             </th>
         </tr>
@@ -43,36 +43,17 @@
         <tr>
             <td>
                 <div class="grid-item">
-                    <input type="text" class="dir" placeholder="身分證字號" @bind="inputValues[3]" />
+                    <input type="text" class="dir" placeholder="病歷號" @bind="inputValues[4]" />
                 </div>
             </td>
             <td>
                 <div class="grid-item">
-                    <input type="text" class="dir" placeholder="性別" @bind="inputValues[4]" />
+                    <input type="date" class="dir" placeholder="生日" @bind="inputDateTime" />
                 </div>
             </td>
             <td>
                 <div class="grid-item">
-                    <input type="text" class="dir" placeholder="病歷號" @bind="inputValues[5]" />
-                </div>
-            </td>
-        </tr>
-
-        <!-- 第三行 -->
-        <tr>
-            <td>
-                <div class="grid-item">
-                    <input type="text" class="dir" placeholder="預約床段" @bind="inputValues[6]" />
-                </div>
-            </td>
-            <td>
-                <div class="grid-item">
-                    <input type="text" class="dir" placeholder="生日" @bind="inputValues[7]" />
-                </div>
-            </td>
-            <td>
-                <div class="grid-item">
-                    <input type="text" class="dir" placeholder="手機號碼" @bind="inputValues[8]" />
+                    <input type="text" class="dir" placeholder="手機號碼" @bind="inputValues[5]" />
                 </div>
             </td>
         </tr>
@@ -80,7 +61,7 @@
 </div>
 
 <div class="bottom-buttons">
-    <button class="button3">回首頁</button>
+    <button class="button3" @onclick="NavigateToHomePage">回首頁</button>
     <button class="button2" @onclick="NavigateToNextPage">下一步</button>
 </div>
 
@@ -88,15 +69,26 @@
 <br />
 
 @code {
-    private string[] inputValues = new string[9];
-    private string[] physiologicalData = new string[8];
+    private string[] inputValues = new string[6];
     private DateTime inputDateTime;
+    private List<Record> Records;
 
+    protected override async Task OnInitializedAsync()
+    {
+        // 在這裡呼叫 API 端點
+        Records = await Http.GetFromJsonAsync<List<Record>>("/api/record");
+    }
+
+    private void NavigateToHomePage()
+    {
+        NavigationManager.NavigateTo("/home");
+    }
 
     private void NavigateToNextPage()
     {
         NavigationManager.NavigateTo("/reservation");
     }
+
 }
 
 
@@ -105,23 +97,21 @@
     .title-container {
         background-color: #acc7d0;
         text-align: center;
-        padding: 80px;
-        margin-bottom: 50px;
+        padding: 35px;
+        margin-bottom: 10px; /* Add margin at the bottom */
         margin-top: 0;
     }
 
     .page-title {
-        font-size: 3em;
-        font-weight: bold;
-        padding: 10px;
-        display: inline-block;
+        font-size: 1.9em; /* Decrease font size */
+        color: #3d474a;
     }
 
     .menu-container {
         display: flex;
         justify-content: space-around;
         background-color: #91a9b1;
-        padding: 20px;
+        padding: 11px;
         margin-left: 60px;
         margin-right: 60px;
     }
@@ -130,7 +120,7 @@
         flex-grow: 1;
         position: relative;
         background-color: white;
-        padding: 25px;
+        padding: 10px;
         cursor: pointer;
         margin: 10 15px;
         font-size: 1.5em;

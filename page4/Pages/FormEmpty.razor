@@ -1,0 +1,54 @@
+﻿@page "/formempty"
+@inject NavigationManager NavigationManager
+
+<div class="title-container">
+    <h1 class="page-title">化療預約系統</h1>
+</div>
+<br />
+<h4 style=" text-align: center ;">入院前評估表單</h4>
+
+<br />
+<br />
+
+<center><p>尚不需填寫表單！</p></center>
+<center><p>請回首頁或查看我的預約</p></center>
+<br />
+<center><button class="button4" @onclick="NavigateToLoginPage">回首頁</button></center>
+
+
+@code {
+    private void NavigateToLoginPage()
+    {
+        NavigationManager.NavigateTo("/home");
+    }
+}
+
+<style>
+
+    .title-container {
+        background-color: #acc7d0;
+        text-align: center;
+        padding: 35px;
+        margin-bottom: 10px; /* Add margin at the bottom */
+        margin-top: 0;
+    }
+
+    .page-title {
+        font-size: 1.9em; /* Decrease font size */
+        color: #3d474a;
+    }
+
+    .i-con {
+        position: relative;
+        margin-bottom: -5px;
+    }
+
+    .button4 {
+        background-color: #e1e7ea; /* 水藍色背景 */
+        color: black;
+        border: 0.5px solid black; /* 黑色細框 */
+        border-radius: 12px; /* 圓邊 */
+        padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
+        cursor: pointer;
+    }
+</style>

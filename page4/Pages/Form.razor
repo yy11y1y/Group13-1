@@ -2,7 +2,9 @@
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
 
-<h3 style="color: #000000; background-color: 	#acc7d0; padding: 10px; text-align: center;">化療病床預約平台</h3>
+<div class="title-container">
+    <h1 class="page-title">化療病床預約系統</h1>
+</div>
 <h4 style=" text-align: center ;">入院前評估表單</h4>
 <p style=" text-align: center ;">請您根據最近一週的狀況填寫表單</p>
 
@@ -240,7 +242,7 @@
 
     private void NavigateToHome()
     {
-        Navigation.NavigateTo("/");
+        Navigation.NavigateTo("/home");
     }
 
     private void NavigateToIndex()
@@ -255,6 +257,19 @@
 }
 
 <style>
+    .title-container {
+        background-color: #acc7d0;
+        text-align: center;
+        padding: 35px;
+        margin-bottom: 10px; /* Add margin at the bottom */
+        margin-top: 0;
+    }
+
+    .page-title {
+        font-size: 1.9em; /* Decrease font size */
+        color: #3d474a;
+    }
+
     table {
         border-collapse: collapse;
         width: 100%;

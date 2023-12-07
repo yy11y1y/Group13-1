@@ -3,12 +3,11 @@
 @inject IJSRuntime JSRuntime
 @inherits LayoutComponentBase
 
-
-<h3 style="color: #000000; background-color: #acc7d0; padding: 10px; text-align: center; display: block; width: 100%;">化療病床預約平台</h3>
+<div class="title-container">
+    <h1 class="page-title">化療病床預約系統</h1>
+</div>
 <br>
 <h4 style="text-align: center;">登入資料</h4>
-
-
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-4 login-box">
@@ -33,7 +32,7 @@
                 </div>
                 <br />
 
-                <button @onclick="NextStep" style="background-color: #E0E0E0; color: #272727; border: 1px solid black; margin-right: 10px;">登入</button>
+                <button @onclick="NextStep" class="button">登入</button>
             </div>
         </div>
     </div>
@@ -76,12 +75,34 @@
 
 
 <style>
-     .login-box {
-         background-color: #f0f0f0; /* 淺灰色 */
-         padding: 20px;
-         border-radius: 8px; /* 可以加入邊框半徑，使框框的邊角更圓滑 */
-         margin-top: 50px;
-     }
-     
+    .title-container {
+        background-color: #acc7d0;
+        text-align: center;
+        padding: 35px;
+        margin-bottom: 10px; /* Add margin at the bottom */
+        margin-top: 0;
+    }
+
+    .page-title {
+        font-size: 1.9em; /* Decrease font size */
+        color: #3d474a;
+    }
+
+    .button {
+        background-color: #e1e7ea; /* 水藍色背景 */
+        color: black;
+        border: 0.5px solid black; /* 黑色細框 */
+        border-radius: 12px; /* 圓邊 */
+        padding: 2px 5px; /* 調整按鈕內容與邊框的距離 */
+        margin: 0 15px; /* 調整按鈕之間的間距 */
+        cursor: pointer;
+    }
+
+    .login-box {
+        background-color: #f0f0f0; /* 淺灰色 */
+        padding: 20px;
+        border-radius: 8px; /* 可以加入邊框半徑，使框框的邊角更圓滑 */
+        margin-top: 30px;
+    }
 </style>
 
